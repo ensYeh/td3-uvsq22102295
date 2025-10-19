@@ -1,7 +1,5 @@
 package fr.uvsq.cprog.collex;
 
-import java.util.Objects;
-
 public class AdresseIP {
 
     // Attibut
@@ -47,14 +45,14 @@ public class AdresseIP {
     public boolean equals(Object o) {
         if(this == o) return true;
         if(!(o instanceof AdresseIP)) return false;
-        AdresseIP adresseIP = (AdresseIP) o;
-        return ip.equals(adresseIP.ip);
+        AdresseIP other = (AdresseIP) o;
+        return ip.equals(other.ip);
     }
 
     // Méthode hashCode()
     @Override
     public int hashCode() {
-        return Objects.hash(ip);
+        return ip.hashCode();
     }
 
 }
