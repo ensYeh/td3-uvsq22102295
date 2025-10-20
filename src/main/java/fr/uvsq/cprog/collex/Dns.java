@@ -21,8 +21,8 @@ public class Dns {
             String[] parts = ligne.split("\\s+"); // découpe la ligne en morceaux séparés par 1 ou plusieurs espaces
             if(parts.length != 2) continue; // si on a pas 2 elt (nom et IP) on ignore
 
-            AdresseIP ip = new AdresseIP(parts[1]);
-            NomMachine nom = new NomMachine(parts[0]);
+            AdresseIP ip = new AdresseIP(parts[0]);
+            NomMachine nom = new NomMachine(parts[1]);
             DnsItem item = new DnsItem(ip, nom);
 
             ipMap.put(ip, item);
@@ -64,7 +64,8 @@ public class Dns {
         ipMap.put(ip,item);
         nomMap.put(nom, item);
 
-        String ligne = nom.toString() + " " + ip.toString() + "\n";
+        // Ajoute une nouvelle ligne avant d'écrire
+        String ligne = "\n" + nom.toString() + " " + ip.toString();
         Files.write(fichierBase, ligne.getBytes(), StandardOpenOption.APPEND); // convertit la chaine en tab d'octets (car Files.write ecrit en otctet) et on ajoute la ligne à la fin sans remplacer tout (APPEND)
     }
 
