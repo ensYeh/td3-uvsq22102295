@@ -15,21 +15,48 @@ public class DnsTUI {
         String saisie = scanner.nextLine();
         String[] parts = saisie.split("\\s+");
 
-        switch (parts[0]) {
-            case "getIp":
-                // Conversion String -> NomMachine
-                NomMachine nomMachine = new NomMachine(parts[1]);
-                return new CommandeGetIp(dns, nomMachine);
-
-            case "getNom":
-                // Conversion String -> AdresseIP
-                AdresseIP ip = new AdresseIP(parts[1]);
+        if (parts.length == 1) {
+            if (AdresseIP.isValid(parts[0])) {
+                AdresseIP ip = new AdresseIP(parts[0]);
                 return new CommandeGetNom(dns, ip);
+            } else if (NomMachine.isValid(parts[0])) {
+                NomMachine nom = new NomMachine(parts[0]);
+                return new CommandeGetIp(dns, nom);
+            }
+        }
 
-            case "addItem":
+        switch (parts[0]) {
+            case "add":
+                if (parts.length < 3) {
+                    throw new IllegalArgumentException(
+                            "Commande 'add' invalide. Format attendu : add <adresse IP> <nom de machine>");
+                }
                 AdresseIP nouvelleIp = new AdresseIP(parts[1]);
                 NomMachine nouveauNom = new NomMachine(parts[2]);
                 return new CommandeAdd(dns, nouvelleIp, nouveauNom);
+
+            case "ls":
+                if (parts.length < 2) {
+                    throw new IllegalArgumentException("Commande 'ls' invalide. Format attendu : ls <domaine> ou ls -a <domaine>");
+                }
+
+                boolean sortByIp = false;
+                String domaine;
+
+                // Vérifie si l'option -a est présente
+                if (parts[1].equals("-a")) {
+                    if (parts.length < 3) {
+                        throw new IllegalArgumentException(
+                                "Commande 'ls' invalide. Format attendu : ls [-a] <domaine>");
+                    }
+                    sortByIp = true;
+                    domaine = parts[2];
+                } else {
+                    domaine = parts[1];
+                }
+
+                // Retourne une commande personnalisée pour gérer le tri
+                return new CommandeLs(dns, domaine, sortByIp);
 
             case "quit":
                 return new CommandeQuit();
