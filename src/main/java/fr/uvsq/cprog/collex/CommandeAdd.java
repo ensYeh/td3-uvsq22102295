@@ -17,7 +17,7 @@ public class CommandeAdd implements Commande {
             dns.addItem(ip, nom);
             return "Ajout effectué !";
         } catch (Exception e) {
-            return "ERREUR : " + e.getMessage();
+            return e.getMessage();
         }
     }
 }
